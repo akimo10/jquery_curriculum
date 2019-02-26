@@ -27,6 +27,16 @@
       // .click() クリック時のイベントを登録する。
       // .fadeIn() 一定時間かけてフェードインする。
       // .fadeOut() 一定時間かけてフェードアウトする。
+      $(function(){
+        $('.modal-show').click(hirakegoma);
+        function hirakegoma(){
+          $('.modal').fadeIn(500);
+        }
+        $('.modal-close').click(simaregoma);
+        function simaregoma(){
+          $('.modal').fadeOut(500);
+        }
+      });
     </script>
   </body>
 </html>

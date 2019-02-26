@@ -26,6 +26,76 @@
     </div>
     <script src="../../common/js/jquery.js"></script>
     <script>
+      $(function(){
+        var countup = 0;
+        var kakoword ="";
+        $('#js-search-button').click(function(){
+          click_event();
+        });//click()//
+
+        var click_event = function() {
+          var word = $('#js-search-word').val();
+          // console.log(word);
+          if(word == kakoword){
+            countup++;
+          }else{
+            countup = 1;
+            $('.lists').empty();
+            kakoword = word;
+          }
+          // console.log(countup);
+          // console.log(kakoword);
+          $.ajax({
+            url: 'https://app.rakuten.co.jp/services/api/BooksTotal/Search/20170404',
+            type: 'GET',
+            datatype: 'json',
+            data: {//ここは！！！！inputパラメータ！！！！//
+              keyword: word,//var = wordの値を代入//
+              applicationId: '1019399324990976605',
+              booksGenreId: '001',
+              hits: '20',
+              page: countup,
+            },//dataInput//
+          })//ajax({})//
+
+          .done(function(data){
+            click_event_action(data);
+          })//done//
+
+          .fail(function(jqXHR, textStatus, errorThrown ) {
+            error(jqXHR, textStatus, errorThrown);
+          });//fail//
+        }//click_event//
+
+          var click_event_action = function(data) {
+            var list = '';
+            // console.log(data['Items']);
+            var length = data['Items'].length;
+            // console.log(data['Items'].length);
+            if(length === 0 ){
+              $('.message').empty();
+              list = '<div class="message">検索結果は見つかりませんでした。<br>別のキーワードで検索してください。</div>';
+            }else{
+              $.each(data['Items'],function(index, elem){
+                var title = elem.Item.title;
+                var author = elem.Item.author;
+                var publishername = elem.Item.publisherName;
+                var bookimg = elem.Item.largeImageUrl;
+                list += "<li class='lists__item'><div class='lists__item__inner'>" +
+                "<a href='"+elem.Item.itemUrl+"' class='lists__item__link' target='_blank'><img src='" +bookimg+"' class='lists__item__img' alt=''><p class='lists__item__detail'>作品名："+title+"</p><p class='lists__item__detail'>作者　："+author+"</p><p class='lists__item__detail'>出版社："+publishername+"</p></a></div></li>";
+              });//each//
+            }//else
+            $('.lists').prepend(list);
+          }//click_event_action//
+
+          var error = function(jqXHR, textStatus, errorThrown){
+            // console.log(jqXHR);
+            // console.log(textStatus);
+            // console.log(errorThrown);
+            alert(jqXHR['responseJSON']['error_description']);
+          }
+
+      });//$(function)//
       // 楽天ブックスの総合検索APIを使って製作してください。
       // answerの挙動を良く見てね！
       //

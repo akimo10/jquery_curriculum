@@ -33,7 +33,38 @@
       // .animate({}) cssのプロパティを一定時間かけて変化させます。アニメーションです。
       // .data() 要素のdata属性を取得します。
       // .width() 要素の幅を取得します。
-      // .length 要素の個数を取得します。
+      // .length 要素の個数を取得します
+      $(function(){
+/*配列を使った、対応*/
+        var YESIAM = 0;
+        var length = $('.slider-list').find('li').length;
+        var positionarray = [];
+        for (var i=0; i < length; i++){
+          if(i === 0){
+            positionarray[i] = i;
+          }else{
+            positionarray[i] = $('.slider-list').find('li').eq(i-1).width()+positionarray[i-1]
+          }
+          }
+          console.log(positionarray);
+        $('.slider-ctrl-btn').click(function(){
+          var direction = $(this).data('ctrl');
+          if(direction == 'next'){
+            YESIAM++;
+            if(YESIAM >= length){
+              YESIAM = 0
+            }
+          }else{
+            YESIAM--;
+            if(YESIAM < 0){
+              YESIAM = length -1
+            }
+          }
+          $('.slider-list').animate({
+            'left' : -(positionarray[YESIAM])
+          },500);
+      });
+        });
     </script>
   </body>
 </html>
